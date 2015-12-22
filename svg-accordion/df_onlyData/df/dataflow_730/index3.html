@@ -1,0 +1,420 @@
+<!doctype html>
+<html>
+	<title></title>
+	<script type="text/javascript" src='./jquery-1.11.3.js'></script>
+	<script type="text/javascript" src='./d3.js'></script>
+	<script type="text/javascript" src="./shape/dataflow.util.js"></script>
+	<script type="text/javascript" src="./shape/dataflow.lib.js"></script>
+	<style type="text/css">
+		#main rect:hover{
+			stroke-width: 5;
+			cursor: pointer;
+		}
+
+		#main text:hover{
+			cursor: pointer;
+		}
+
+	</style>
+	<body>
+		<div id='main'>
+
+		</div>
+		<script type="text/javascript">
+			$(function() {
+				'use strict'
+
+				//基本组件数据
+				var data = {
+							"68": {
+								"input": 0,
+								"name": "ForwardAnalysis",
+								"output": 2,
+								"subComponents": null,
+								"type": "ZeroToMany",
+								"values": {
+									"name": ["PreAnalysis"]
+								}
+							},
+							"67": {
+								"input": 0,
+								"name": "DataPlayBack",
+								"output": 2,
+								"subComponents": null,
+								"type": "ZeroToMany",
+								"values": {
+									"name": ["Data Play Back"]
+								}
+							},
+							"59": {
+								"input": 2,
+								"name": "Folder",
+								"output": 2,
+								"subComponents": null,
+								"type": "ManyToMany",
+								"values": {
+									"name": ["folder"]
+								}
+							},
+							"58": {
+								"input": 0,
+								"name": "Aggregator",
+								"output": 2,
+								"subComponents": null,
+								"type": "OneToMany",
+								"values": {
+									"name": ["aggregator"]
+								}
+							},
+							"63": {
+								"input": 2,
+								"name": "Filter",
+								"output": 2,
+								"subComponents": null,
+								"type": "ManyToMany",
+								"values": {
+									"name": ["filter"]
+								}
+							},
+							"60": {
+								"input": 2,
+								"name": "Detector",
+								"output": 1,
+								"subComponents": null,
+								"type": "ManyToMany",
+								"values": {
+									"name": ["detector"]
+								}
+							}
+						};
+				//数据类别的组件数据
+				var data2 = {
+					"62": {
+						"input": 2,
+						"name": "Data Pool",
+						"output": 2,
+						"subComponents": null,
+						"type": "OneToMany",
+						"values": {
+							"name": ["data pool"]
+						}
+					}
+				};
+
+				var data3 = {
+					"68": {
+						"input": 0,
+						"name": "ForwardAnalysis",
+						"output": 2,
+						"subComponents": null,
+						"type": "ZeroToMany",
+						"values": {
+							"name": ["PreAnalysis"]
+						}
+					},
+					"67": {
+						"input": 0,
+						"name": "DataPlayBack",
+						"output": 2,
+						"subComponents": null,
+						"type": "ZeroToMany",
+						"values": {
+							"name": ["Data Play Back"]
+						}
+					},
+					"59": {
+						"input": 2,
+						"name": "Folder",
+						"output": 2,
+						"subComponents": null,
+						"type": "ManyToMany",
+						"values": {
+							"name": ["folder"]
+						}
+					},
+					"58": {
+						"input": 0,
+						"name": "Aggregator",
+						"output": 2,
+						"subComponents": null,
+						"type": "OneToMany",
+						"values": {
+							"name": ["aggregator"]
+						}
+					},
+					"63": {
+						"input": 2,
+						"name": "Filter",
+						"output": 2,
+						"subComponents": null,
+						"type": "ManyToMany",
+						"values": {
+							"name": ["filter"]
+						}
+					},
+					"60": {
+						"input": 2,
+						"name": "Detector",
+						"output": 1,
+						"subComponents": null,
+						"type": "ManyToMany",
+						"values": {
+							"name": ["detector"]
+						}
+					}
+				}
+				var dataList = [data, data2,data3];
+
+
+				var totalWidth = 310;
+				var totalHeight = 750;
+				var containerWidth = 300;
+				var containerHeight = 30;
+				var containerStrokeWidth = 1;
+
+				var margin = {
+						top: 10,
+						right: 10,
+						bottom: 10,
+						left: 10
+					},
+					width = 1400 - margin.left - margin.right,
+					height = 800 - margin.top - margin.bottom;
+
+				var svg = d3.select('#main').append('svg')
+					.attr('width', width + margin.left + margin.right)
+					.attr('height', height + margin.top + margin.bottom)
+					.append('g')
+					.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+					.attr('width', totalWidth)
+					.attr('height', totalHeight)
+					.style({
+						'fill': 'none',
+						//'stroke': "#9117FF",
+						'stroke-width': 2,
+					});
+					
+				//初始化容器
+				var containersList = initContainers();
+
+				//绑定点击事件到每一个container中
+				$.each(containersList, function(index, val) {
+					bandClickEventToContainer(val);
+				});
+
+				/**
+				 * 绑定事件到container中
+				 * @param  {d3 element} container [component元素的容器]
+				 * 
+				 */
+				function bandClickEventToContainer(container) {
+					if (container) {
+						container.select('text').on('click', _containerClickEvent);
+						// $("rect:first",$(this).parent()).trigger("click");
+						container.select('rect').on('click', _containerClickEvent);
+					};
+				};
+
+				function _containerClickEvent() {
+					//重置容器
+					reSize();
+					//获取当前触发容器 id
+					var componentName = $(this).parent().attr('id');
+					//获取当前触发容器对应数据index
+					var category_index = parseInt($(this).parent().attr('category_index'));
+					//获取当前触发容器中Title元素 y 坐标, 并且计算出显示容器内容的 y 坐标 (31 = 30是容器标题高度, 1为边宽度)
+					//var yHight = parseInt($("rect:first", $(this).parent()).attr('y')) + 31;
+					var yHight = parseInt($("rect:first", $(this).parent()).attr('y')) + containerHeight+ containerStrokeWidth;
+
+					var outer = d3.select('#' + componentName)
+									.append('g')
+									//显示容器内容的id, 依据此id来销魂当前元素
+									.attr('id', '_accordion_current_components');
+									
+					var content = outer
+						.append('rect')
+						.attr('x', 10)
+						//设置显示容器内容的y 坐标
+						.attr('y', yHight)
+						.attr('width', containerWidth)
+						.attr('height', 0)
+						.attr('rx', 1)
+						.attr('ry', 1)
+						.style({
+							'fill': '#F1E6E6',
+							'opacity': 0.5,
+							"stroke": "#FB8BBF"
+						});
+
+						
+					var componentList =outer
+									.append('g')
+									.attr('transform', 'translate(' + 40 + ',' + (50+category_index*(containerHeight+ containerStrokeWidth)) + ')')
+									.style({"opacity":0});
+											  
+					componentManage({
+						container: componentList,
+						properties: {width: 300, height: 200},
+						data: dataList[category_index], 
+						cid: 61
+					});
+					DataFlowUtil.drawAPI.addRendering(componentList);
+
+					//是否要重新修改当前迭代容器的size
+					var reSizeComponentContainer = false;
+					//containersList必须为有序的, i.e. 按照顺序从上到下排列
+					// 查找当前触发事件的容器，如果查找到 那么接下来数组中所有容器要修改size
+					$.each(containersList, function(index, val) {
+						//查找当前触发事件的容器
+						if (componentName == val.attr('id')) {
+
+							reSizeComponentContainer = true;
+							return;
+						}
+
+						if (reSizeComponentContainer) {
+							//*****如果需要移动的元素过多，可以考虑移动整个g元素*******
+							//需要修改的容器y 坐标 修改为 (500+ 10 +(30+3)*index)
+							//500 是 显示容器内容(current_components)的高度
+							//10 是当前容器数组中Title元素的初始 y
+							//(30+1) 30 为 每一个容器标题的高度 , 1为 边宽度
+							//d3.select('#' + val.attr('id')).select('rect').transition().duration(1000).attr('y', (500 + 10 + (30 + 1) * index));
+							//修改text坐标
+							//32为当前text的y
+							//d3.select('#' + val.attr('id')).select('text').transition().duration(1000).attr('y', (500 + 32 + (30 + 1) * index));
+							
+							d3.select('#' + val.attr('id')).select('rect').transition().duration(500).attr('y', (500 + 10 + (containerHeight + containerStrokeWidth) * index));
+							d3.select('#' + val.attr('id')).select('text').transition().duration(500).attr('y', (500 + 32 + (containerHeight + containerStrokeWidth) * index));
+													
+							
+						};
+					});
+					
+					//设定展示的动画		    
+					content.transition()
+						.duration(1000)
+						.ease("linear")
+						.delay(500)
+						//显示容器内容的高度
+						.attr("height", 500);
+
+					componentList.transition()
+								 .duration(1000)
+								 .ease("linear")
+								 .delay(500)
+								 .style({"opacity":1});
+
+				};
+				/**
+				 * 重置components 容器到初始状态
+				 */
+				function reSize() {
+					//销毁当前显示的components组件集合
+					if ($('#_accordion_current_components')) {
+						$('#_accordion_current_components').remove();
+					}
+					//*****如果需要重置的元素过多，可以考虑重置整个g元素*******
+					//重置每一个元素至初始状态
+					$.each(containersList, function(index, val) {
+						val.select('rect').attr('y', 10 + index * (containerHeight + containerStrokeWidth));
+						val.select('text').attr('y', 32 + index * (containerHeight + containerStrokeWidth));
+					});
+
+				};
+
+				/**
+				 * 初始化component容器
+				 * 获取所有容器的集合(以d3 element为元素返回)
+				 * @return {[d3 element]} [当前所有容器的集合]
+				 */
+				function initContainers() {
+					//创建components容器,  A B C
+					//A
+					var componentsContainerA = svg.append('g')
+						.attr('id', '_accordioncomponentA')
+						.attr('category_index', 0);
+					componentsContainerA.append('rect')
+						.attr('x', 10)
+						.attr('y', 10)
+						.attr('width', containerWidth)
+						.attr('height', containerHeight)
+						.attr('rx', 3)
+						.attr('ry', 3)
+						.style({
+							'fill': '#F68A8A',
+							'stroke': "#D2FC0A",
+							// 'stroke-width': 1,
+						})
+						;
+
+					componentsContainerA.append('text')
+						.attr({
+							"x": '15',
+							"y": '32',
+							"font-family": "Verdana",
+							"font-size": "20",
+							'stroke': "#351F1F",
+						})
+						.text("ContainerA");
+					//B
+					var componentsContainerB = svg.append('g')
+						.attr('id', '_accordioncomponentB')
+						.attr('category_index', 1);
+					componentsContainerB.append('rect')
+						.attr('x', 10)
+						.attr('y', (10 + containerHeight + containerStrokeWidth))
+						.attr('width', containerWidth)
+						.attr('height', containerHeight)
+						.attr('rx', 3)
+						.attr('ry', 3)
+						.style({
+							'fill': '#A273FC',
+							'stroke': "#FB66CF",
+							// 'stroke-width': 1,
+						});
+					componentsContainerB.append('text')
+						.attr({
+							"x": '15',
+							"y": 32 + 31,
+							"font-family": "Verdana",
+							"font-size": "20",
+							'stroke': "#9117FF",
+						})
+						.text("ContainerB");
+
+					//C
+					var componentsContainerC = svg.append('g')
+						.attr('id', '_accordioncomponentC')
+						.attr('category_index', 2);
+
+					componentsContainerC.append('rect')
+						.attr('x', 10)
+						.attr('y', (10 + 30 + 1 + 30 + 1))
+						.attr('width', containerWidth)
+						.attr('height', containerHeight)
+						.attr('rx', 3)
+						.attr('ry', 3)
+						.style({
+							'fill': '#96F7F0',
+							'stroke': "#EB7CFF",
+							// 'stroke-width': 1,
+						});
+
+					componentsContainerC.append('text')
+						.attr({
+							"x": '15',
+							"y": 32 + 31 + 31,
+							"font-family": "Verdana",
+							"font-size": "20",
+							'stroke': "#5F59F9",
+						})
+						.text("ContainerC");
+
+					//必须为有序数组				    
+					return [componentsContainerA, componentsContainerB, componentsContainerC];
+				};
+			});
+
+		</script>
+	</body>
+</html>

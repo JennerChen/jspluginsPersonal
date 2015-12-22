@@ -1,0 +1,182 @@
+<!doctype html>
+<html>
+	<head>
+		<title>SVG 手风琴 使用</title>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="./bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="./svgaccordion.css">
+		<script type="text/javascript" src='./jquery-1.11.3.js'></script>
+		<script type="text/javascript" src='./underscore.js'></script>
+		<script type="text/javascript" src='./d3.js'></script>
+		<script type="text/javascript" src='./bootstrap.min.js'></script>
+		<script type="text/javascript" src='./svgaccordion.js'></script>
+		<script type="text/javascript">
+			$(function(){
+				var margin = {
+						top: 10,
+						right: 10,
+						bottom: 10,
+						left: 10
+					},
+					width = 500 - margin.left - margin.right,
+					height = 800 - margin.top - margin.bottom;
+
+				var svg = d3.select('#main').append('svg')
+					.attr('width', width + margin.left + margin.right)
+					.attr('height', height + margin.top + margin.bottom);			
+
+				// var totalWidth = 310;
+				// var totalHeight = 750;
+				// var containerWidth = 300;
+				// var containerHeight = 30;
+				// var containerStrokeWidth = 1;
+				// var svgaccordion = new SvgAccordion(svg, dataList,400, 750, 300 ,30,2);
+				var svgaccordion = new SvgAccordion(svg);
+				$("#detail").hide();
+			});
+			function goUsage(obj){
+				$("#detail").hide();
+				$("#description").fadeOut("slow", function(){
+					$("#description").slideDown("slow");			
+				});
+				$("li",$(obj).parent().parent()).attr("class","")
+				$(obj).parent().attr("class","active");
+			}
+
+			function goDetail(obj){
+				$("li",$(obj).parent().parent()).attr("class","");
+				$(obj).parent().attr("class","active");
+				$("#description").hide();
+				$("#detail").show();
+
+			}
+		</script>
+	</head>
+	<body>
+		<div class='container-fluid' id='outer'>
+			<div>
+				<h1>SVG Accordion DEMO </h1>
+				<div class="alert alert-info" role="alert">
+				  	无任何数据的手风琴样式
+				  	<a class='btn btn-primary' href='./df_withUIdata/index2.html'>中间含有UI数据的例子点这</a>
+				</div>
+				<span class='text text-warning'>依赖js: jquery,d3  &nbsp;&nbsp;css: svgaccordion.css</span>
+
+				<hr>
+			</div>
+			<div id='main' class='col-md-3'></div>
+			<div class='col-md-1'>
+				<ul class="nav nav-pills nav-stacked">
+					<li class="active"><a href="javascript:void(0);" onclick='goUsage(this)'>Usage</a></li>
+				 	<li ><a href="javascript:void(0);" onclick='goDetail(this)'>插件核心变量</a></li>
+				 	<!-- <li ><a href="#">Messages</a></li> -->
+				</ul>
+			</div>
+			<div id='description' class='col-md-8'>
+				<h2>Usage</h2>
+				
+				<br>
+				<pre>
+//页面中存在一个id为main的div
+var svg = d3.select('#main').append('svg');
+//需要保证页面中含有一个有效的d3 svg对象！
+var svgaccordion = new SvgAccordion(svg);
+//或者,参数介绍见下表
+var svgaccordion = new SvgAccordion(svg, dataList,400, 750, 300 ,30,2);				
+				</pre>
+
+				<h3>共有6个参数,如下</h3>
+				<table class='table table-hover'>
+					<tr class='info'>
+						<td>参数名</td>
+						<td>是否必须</td>
+						<td>描述</td>
+						<td>结构/要求</td>
+						<td>参数例子</td>
+					</tr>
+					<tr>
+						<td>svg</td>
+						<td>必须[mandatory]</td>
+						<td>需要添加手风琴的SVG</td>
+						<td>d3的元素</td>
+						<td>无</td>
+					</tr>
+					<tr>
+						<td>dataList</td>
+						<td>必须[mandatory]</td>
+						<td>输入显示目录条目的名字等信息</td>
+						<td>目录数组</td>
+						<td>[{"displayName":"A"},{"displayName":"B"},{"displayName":"C"}]</td>
+					</tr>
+					<tr>
+						<td>totalWidth</td>
+						<td>可选[option]</td>
+						<td>手风琴宽度</td>
+						<td>数字</td>
+						<td>默认是310</td>
+					</tr>
+					<tr>
+						<td>totalWidth</td>
+						<td>可选[option]</td>
+						<td>手风琴宽度</td>
+						<td>数字</td>
+						<td>默认是310</td>
+					</tr>
+					<tr>
+						<td>totalHeight</td>
+						<td>可选[option]</td>
+						<td>手风琴高度</td>
+						<td>数字</td>
+						<td>默认是750</td>
+					</tr>
+					<tr>
+						<td>containerWidth</td>
+						<td>可选[option]</td>
+						<td>手风琴每个目录的宽度</td>
+						<td>数字</td>
+						<td>默认是300,该值应略小于totalWidth</td>
+					</tr>
+					<tr>
+						<td>containerHeight</td>
+						<td>可选[option]</td>
+						<td>手风琴每个目录的高度</td>
+						<td>数字</td>
+						<td>默认是30</td>
+					</tr>
+					<tr>
+						<td>containerStrokeWidth</td>
+						<td>可选[option]</td>
+						<td>手风琴每个目录的边框厚度</td>
+						<td>数字</td>
+						<td>默认是1</td>
+					</tr>
+
+				</table>
+			</div>
+			<div id='detail' class='col-md-8'>
+				<h3>创建目录时,给每个目录赋予一个id,并且给予一个目录索引</h3>
+				<pre>
+var containerNew =  svg.append('g')			 						
+//根据此id销毁当前显示的view
+.attr('id', '_accordion_component'+index)
+//根据此index来绑定对应的数据
+.attr('category_index', index);</pre>
+				<h3>显示内容的svg id:_accordion_current_components</h3>
+				<div>
+					<pre>
+//根据此id来销毁和创建显示的内容
+//创建显示内容
+var componentName = $(this).parent().attr('id');//获取当前触发容器 id
+	.....
+var outer = d3.select('#' + componentName)
+			.append('g')
+			//显示容器内容的id, 依据此id来销魂当前元素
+			.attr('id', '_accordion_current_components');
+    ......
+					</pre>
+				</div>
+			</div>
+		</div>
+		
+	</body>
+</html>

@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+	<head>
+		<title>SVG 手风琴 使用</title>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="./bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="./svgaccordion.css">
+		<script type="text/javascript" src='./jquery-1.11.3.js'></script>
+		<script type="text/javascript" src='./underscore.js'></script>
+		<script type="text/javascript" src='./d3.js'></script>
+		<script type="text/javascript" src='./bootstrap.min.js'></script>
+		<script type="text/javascript" src='./svgaccordion.js'></script>
+			
+	</head>
+	<body>
+		<div class='container-fluid' id='outer'>
+			<div>
+				<h1>SVG Accordion DEMO </h1>
+				<div class="alert alert-info" role="alert">
+				  	无任何数据的手风琴样式
+				  	<a class='btn btn-primary' href='./df_withUIdata/index2.html'>中间含有UI数据的例子点这</a>
+				</div>
+				<span class='text text-warning'>依赖js: jquery,d3  对应css: svgaccordion.css</span>
+
+				<hr>
+			</div>
+			<div id='main'></div>
+		</div>
+		<script type="text/javascript">
+
+			$(function(){
+				var margin = {
+						top: 10,
+						right: 10,
+						bottom: 10,
+						left: 10
+					},
+					width = 1400 - margin.left - margin.right,
+					height = 800 - margin.top - margin.bottom;
+
+				var svg = d3.select('#main').append('svg')
+					.attr('width', width + margin.left + margin.right)
+					.attr('height', height + margin.top + margin.bottom);			
+
+				// var totalWidth = 310;
+				// var totalHeight = 750;
+				// var containerWidth = 300;
+				// var containerHeight = 30;
+				// var containerStrokeWidth = 1;
+				// var svgaccordion = new SvgAccordion(svg, dataList,400, 750, 300 ,30,2);
+				var svgaccordion = new SvgAccordion(svg);
+			});
+		</script>
+	</body>
+</html>

@@ -1,0 +1,108 @@
+<html>
+	<head>
+		<script type="text/javascript" src="jquery-1.10.2.js"></script>
+		<script type="text/javascript" src="d3.v3.min.js"></script>
+		<script type="text/javascript" src="dataflow.util.js"></script>
+		<script type="text/javascript" src="dataflow.lib.js"></script>
+	</head>
+	<style type="text/css">
+		
+	</style>
+<body>
+	<div id="container">
+		
+	</div>
+	<script type="text/javascript">
+		//基本组件数据
+		var data = {
+					"68": {
+						"input": 0,
+						"name": "ForwardAnalysis",
+						"output": 2,
+						"subComponents": null,
+						"type": "ZeroToMany",
+						"values": {
+							"name": ["PreAnalysis"]
+						}
+					},
+					"67": {
+						"input": 0,
+						"name": "DataPlayBack",
+						"output": 2,
+						"subComponents": null,
+						"type": "ZeroToMany",
+						"values": {
+							"name": ["Data Play Back"]
+						}
+					},
+					"59": {
+						"input": 2,
+						"name": "Folder",
+						"output": 2,
+						"subComponents": null,
+						"type": "ManyToMany",
+						"values": {
+							"name": ["folder"]
+						}
+					},
+					"58": {
+						"input": 0,
+						"name": "Aggregator",
+						"output": 2,
+						"subComponents": null,
+						"type": "OneToMany",
+						"values": {
+							"name": ["aggregator"]
+						}
+					},
+					"63": {
+						"input": 2,
+						"name": "Filter",
+						"output": 2,
+						"subComponents": null,
+						"type": "ManyToMany",
+						"values": {
+							"name": ["filter"]
+						}
+					},
+					"60": {
+						"input": 2,
+						"name": "Detector",
+						"output": 1,
+						"subComponents": null,
+						"type": "ManyToMany",
+						"values": {
+							"name": ["detector"]
+						}
+					}
+				};
+		//数据类别的组件数据
+		var data2 = {
+			"62": {
+				"input": 2,
+				"name": "Data Pool",
+				"output": 2,
+				"subComponents": null,
+				"type": "OneToMany",
+				"values": {
+					"name": ["data pool"]
+				}
+			}
+		};
+
+		var c = d3.select("#container").append('svg').attr({
+			'width': 1000,
+			'height': 800
+		}).append('g');
+		
+
+		componentManage({
+			container: c,
+			properties: {width: 300, height: 200},
+			data: data, 
+			cid: 61
+		});
+		DataFlowUtil.drawAPI.addRendering(c);
+	</script>
+</body>
+</html>

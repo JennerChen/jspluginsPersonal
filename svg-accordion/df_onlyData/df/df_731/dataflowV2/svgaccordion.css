@@ -1,0 +1,8 @@
+div rect:hover{
+		stroke-width: 5;
+		/*cursor: pointer;*/
+	}
+
+	div text:hover{
+		cursor: pointer;
+	}

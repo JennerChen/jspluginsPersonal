@@ -1,0 +1,31 @@
+<html>
+	<script type="text/javascript" src='../d3.js'></script>
+	<body>
+		<script type="text/javascript">
+			var margin = { top: 10, right: 10, bottom: 10, left: 10 },
+			    width = 960 - margin.left - margin.right,
+			    height = 640 - margin.top - margin.bottom;
+			
+			var svg = d3.select('body').append('svg')
+			    .attr('width', width + margin.left + margin.right)
+			    .attr('height', height + margin.top + margin.bottom)
+			  .append('g')
+			    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+
+			   var rectA= svg.append('g').append('rect')
+			        .attr('x', 10)
+			        .attr('y', 10)
+			        .attr('width', 100)
+			        .attr('height', 100)
+			        .attr('rx', 0)
+			        .attr('ry', 0)
+			        .style('fill', '#D74747');
+			        // svg.append('rect')
+
+			       rectA.on('click',function(){
+			       	console.log('click');
+			       })
+		</script>
+	</body>
+</html>

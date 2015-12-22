@@ -1,0 +1,205 @@
+<!doctype html>
+<html>
+	<head>
+		<title>SVG 手风琴 使用</title>
+		<meta charset="UTF-8">
+		<script type="text/javascript" src='./jquery-1.11.3.js'></script>
+		<script type="text/javascript" src='./underscore.js'></script>
+		<script type="text/javascript" src='./d3.js'></script>
+		<script type="text/javascript" src="./shape/dataflow.util.js"></script>
+		<script type="text/javascript" src="./shape/dataflow.lib.js"></script>
+		<script type="text/javascript" src='./svgaccordion.js'></script>
+		<style type="text/css">
+			#main rect:hover{
+				stroke-width: 5;
+				cursor: pointer;
+			}
+
+			#main text:hover{
+				cursor: pointer;
+			}
+
+		</style>
+	</head>
+	<body>
+		<div id='main'></div>
+		<script type="text/javascript">
+
+			$(function(){
+				var margin = {
+						top: 10,
+						right: 10,
+						bottom: 10,
+						left: 10
+					},
+					width = 1400 - margin.left - margin.right,
+					height = 800 - margin.top - margin.bottom;
+
+				var svg = d3.select('#main').append('svg')
+					.attr('width', width + margin.left + margin.right)
+					.attr('height', height + margin.top + margin.bottom);
+
+
+				//基本组件数据
+				var data = {
+							"68": {
+								"input": 0,
+								"name": "ForwardAnalysis",
+								"output": 2,
+								"subComponents": null,
+								"type": "ZeroToMany",
+								"values": {
+									"name": ["PreAnalysis"]
+								}
+							},
+							"67": {
+								"input": 0,
+								"name": "DataPlayBack",
+								"output": 2,
+								"subComponents": null,
+								"type": "ZeroToMany",
+								"values": {
+									"name": ["Data Play Back"]
+								}
+							},
+							"59": {
+								"input": 2,
+								"name": "Folder",
+								"output": 2,
+								"subComponents": null,
+								"type": "ManyToMany",
+								"values": {
+									"name": ["folder"]
+								}
+							},
+							"58": {
+								"input": 0,
+								"name": "Aggregator",
+								"output": 2,
+								"subComponents": null,
+								"type": "OneToMany",
+								"values": {
+									"name": ["aggregator"]
+								}
+							},
+							"63": {
+								"input": 2,
+								"name": "Filter",
+								"output": 2,
+								"subComponents": null,
+								"type": "ManyToMany",
+								"values": {
+									"name": ["filter"]
+								}
+							},
+							"60": {
+								"input": 2,
+								"name": "Detector",
+								"output": 1,
+								"subComponents": null,
+								"type": "ManyToMany",
+								"values": {
+									"name": ["detector"]
+								}
+							}
+						};
+				var categoryA ={
+					"displayName": "CategoryA",
+					"data": data
+				};
+				//数据类别的组件数据
+				var data2 = {
+					"62": {
+						"input": 2,
+						"name": "Data Pool",
+						"output": 2,
+						"subComponents": null,
+						"type": "OneToMany",
+						"values": {
+							"name": ["data pool"]
+						}
+					}
+				};
+				var categoryB ={
+					"displayName": "CategoryB",
+					"data": data2,
+				};
+				var data3 = {
+					"68": {
+						"input": 0,
+						"name": "ForwardAnalysis",
+						"output": 2,
+						"subComponents": null,
+						"type": "ZeroToMany",
+						"values": {
+							"name": ["PreAnalysis"]
+						}
+					},
+					"67": {
+						"input": 0,
+						"name": "DataPlayBack",
+						"output": 2,
+						"subComponents": null,
+						"type": "ZeroToMany",
+						"values": {
+							"name": ["Data Play Back"]
+						}
+					},
+					"59": {
+						"input": 2,
+						"name": "Folder",
+						"output": 2,
+						"subComponents": null,
+						"type": "ManyToMany",
+						"values": {
+							"name": ["folder"]
+						}
+					},
+					"58": {
+						"input": 0,
+						"name": "Aggregator",
+						"output": 2,
+						"subComponents": null,
+						"type": "OneToMany",
+						"values": {
+							"name": ["aggregator"]
+						}
+					},
+					"63": {
+						"input": 2,
+						"name": "Filter",
+						"output": 2,
+						"subComponents": null,
+						"type": "ManyToMany",
+						"values": {
+							"name": ["filter"]
+						}
+					},
+					"60": {
+						"input": 2,
+						"name": "Detector",
+						"output": 1,
+						"subComponents": null,
+						"type": "ManyToMany",
+						"values": {
+							"name": ["detector"]
+						}
+					}
+				}
+
+				var categoryC ={
+					"displayName": "CategoryC",
+					"data": data3
+				};
+				var dataList = [categoryA, categoryB,categoryC];
+				// var totalWidth = 310;
+				// var totalHeight = 750;
+				// var containerWidth = 300;
+				// var containerHeight = 30;
+				// var containerStrokeWidth = 1;
+				var svgaccordion = new SvgAccordion(svg, dataList,310, 750, 300 ,30,1);
+				
+			});
+		</script>
+	</body>
+</html>

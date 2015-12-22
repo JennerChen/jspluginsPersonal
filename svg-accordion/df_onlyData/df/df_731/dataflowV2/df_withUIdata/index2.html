@@ -1,0 +1,249 @@
+<!doctype html>
+<html>
+	<head>
+		<title>SVG 手风琴 使用</title>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="./bootstrap.min.css">
+		<script type="text/javascript" src='./jquery-1.11.3.js'></script>
+		<script type="text/javascript" src='./underscore.js'></script>
+		<script type="text/javascript" src='./d3.js'></script>
+		<script type="text/javascript" src='./bootstrap.min.js'></script>
+		<script type="text/javascript" src="./shape/dataflow.util.js"></script>
+		<script type="text/javascript" src="./shape/dataflow.lib.js"></script>
+		<script type="text/javascript" src='./svgaccordion.js'></script>
+		<style type="text/css">
+			#main rect:hover{
+				stroke-width: 5;
+				/*cursor: pointer;*/
+			}
+
+			#main text:hover{
+				cursor: pointer;
+			}
+			#outer>div{
+				float: left;
+			}
+			#main{
+				width: 1500px;
+				height: 800px;
+			}
+			
+		</style>
+		
+	</head>
+	<body>
+		<div class='container-fluid' id='outer'>
+			<div id='main'>
+			</div>
+			
+			
+		</div>
+		<script type="text/javascript">
+
+			$(function(){
+				var margin = {
+						top: 10,
+						right: 10,
+						bottom: 10,
+						left: 10
+					},
+					width = 1400 - margin.left - margin.right,
+					height = 800 - margin.top - margin.bottom;
+
+				var svg = d3.select('#main').append('svg')
+					.attr('width', width + margin.left + margin.right)
+					.attr('height', height + margin.top + margin.bottom);
+
+				var g = svg
+					.append('g')
+					.attr("id",'canvas')
+					.append('rect')
+					    .attr('x', 350)
+					    .attr('y', 0)
+					    .attr('width', 1400)
+					    .attr('height', 750)
+					    .attr('rx', 0)
+					    .attr('ry', 0)
+					    .style('fill', '#F6DFDF')
+					    .attr('transform', 'translate(' + margin.left + ',' + margin.right*2 + ')');
+				//基本组件数据
+				var data = {
+							"68": {
+								"input": 0,
+								"name": "ForwardAnalysis",
+								"output": 2,
+								"subComponents": null,
+								"type": "ZeroToMany",
+								"values": {
+									"name": ["PreAnalysis"]
+								}
+							},
+							"67": {
+								"input": 0,
+								"name": "DataPlayBack",
+								"output": 2,
+								"subComponents": null,
+								"type": "ZeroToMany",
+								"values": {
+									"name": ["Data Play Back"]
+								}
+							},
+							"59": {
+								"input": 2,
+								"name": "Folder",
+								"output": 2,
+								"subComponents": null,
+								"type": "ManyToMany",
+								"values": {
+									"name": ["folder"]
+								}
+							},
+							"58": {
+								"input": 0,
+								"name": "Aggregator",
+								"output": 2,
+								"subComponents": null,
+								"type": "OneToMany",
+								"values": {
+									"name": ["aggregator"]
+								}
+							},
+							"63": {
+								"input": 2,
+								"name": "Filter",
+								"output": 2,
+								"subComponents": null,
+								"type": "ManyToMany",
+								"values": {
+									"name": ["filter"]
+								}
+							},
+							"60": {
+								"input": 2,
+								"name": "Detector",
+								"output": 1,
+								"subComponents": null,
+								"type": "ManyToMany",
+								"values": {
+									"name": ["detector"]
+								}
+							}
+						};
+				var categoryA ={
+					"displayName": "CategoryA",
+					"data": data
+				};
+				//数据类别的组件数据
+				var data2 = {
+					"62": {
+						"input": 2,
+						"name": "Data Pool",
+						"output": 2,
+						"subComponents": null,
+						"type": "OneToMany",
+						"values": {
+							"name": ["data pool"]
+						}
+					}
+				};
+				var categoryB ={
+					"displayName": "CategoryB",
+					"data": data2,
+				};
+				var data3 = {
+					"68": {
+						"input": 0,
+						"name": "ForwardAnalysis",
+						"output": 2,
+						"subComponents": null,
+						"type": "ZeroToMany",
+						"values": {
+							"name": ["PreAnalysis"]
+						}
+					},
+					"67": {
+						"input": 0,
+						"name": "DataPlayBack",
+						"output": 2,
+						"subComponents": null,
+						"type": "ZeroToMany",
+						"values": {
+							"name": ["Data Play Back"]
+						}
+					},
+					"59": {
+						"input": 2,
+						"name": "Folder",
+						"output": 2,
+						"subComponents": null,
+						"type": "ManyToMany",
+						"values": {
+							"name": ["folder"]
+						}
+					},
+					"58": {
+						"input": 0,
+						"name": "Aggregator",
+						"output": 2,
+						"subComponents": null,
+						"type": "OneToMany",
+						"values": {
+							"name": ["aggregator"]
+						}
+					},
+					"63": {
+						"input": 2,
+						"name": "Filter",
+						"output": 2,
+						"subComponents": null,
+						"type": "ManyToMany",
+						"values": {
+							"name": ["filter"]
+						}
+					},
+					"60": {
+						"input": 2,
+						"name": "Detector",
+						"output": 1,
+						"subComponents": null,
+						"type": "ManyToMany",
+						"values": {
+							"name": ["detector"]
+						}
+					}
+				}
+
+				var categoryC ={
+					"displayName": "CategoryC",
+					"data": data3
+				};
+
+				//数据类别的组件数据
+				var data4 = {
+					"62": {
+						"input": 2,
+						"name": "Data Pool",
+						"output": 2,
+						"subComponents": null,
+						"type": "OneToMany",
+						"values": {
+							"name": ["data pool"]
+						}
+					}
+				};
+				var categoryD ={
+					"displayName": "CategoryD",
+					"data": data4,
+				};
+				var dataList = [categoryA, categoryB,categoryC,categoryD];
+				// var totalWidth = 310;
+				// var totalHeight = 750;
+				// var containerWidth = 300;
+				// var containerHeight = 30;
+				// var containerStrokeWidth = 1;
+				// var svgaccordion = new SvgAccordion(svg, dataList,400, 750, 300 ,30,2);
+				var svgaccordion = new SvgAccordion(svg, dataList);
+			});
+		</script>
+	</body>
+</html>
